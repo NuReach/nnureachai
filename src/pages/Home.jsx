@@ -1,49 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
+import Navbar from "../components/Navbar";
 
 const Home = () => {
+  const [language, setLanguage] = useState("en");
+
+  const translations = {
+    en: {
+      title: "Welcome to Nureach AI",
+      subtitle:
+        "Empowering your marketing strategy with advanced artificial intelligence",
+      getStarted: "Get Started",
+      learnMore: "Learn More",
+    },
+    km: {
+      title: "សូមស្វាគមន៍មកកាន់ Nureach AI",
+      subtitle: "បំពាក់ដោយយុទ្ធសាស្ត្រទីផ្សាររបស់អ្នកជាមួយបញ្ញាសិប្បនិម្មិត",
+      getStarted: "ចាប់ផ្តើម",
+      learnMore: "ស្វែងយល់បន្ថែម",
+    },
+  };
+
+  const t = translations[language];
+
   return (
     <div
       className="min-h-screen flex flex-col"
       style={{ backgroundColor: "#cce49e" }}
     >
-      {/* Navbar */}
-      <nav
-        style={{ backgroundColor: "#ffffff" }}
-        className="border-b border-gray-100 py-6"
-      >
-        <div className="container mx-auto flex justify-between items-center px-6">
-          <div
-            style={{ color: "#297fb2" }}
-            className="text-3xl font-light tracking-wide"
-          >
-            Nureach AI
-          </div>
-          <ul className="flex space-x-8 font-light text-lg">
-            <li>
-              <a
-                href="#"
-                style={{ color: "#297fb2" }}
-                className="transition duration-200"
-                onMouseEnter={(e) => (e.target.style.color = "#cce49e")}
-                onMouseLeave={(e) => (e.target.style.color = "#297fb2")}
-              >
-                Create Avatar
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                style={{ color: "#297fb2" }}
-                className="transition duration-200"
-                onMouseEnter={(e) => (e.target.style.color = "#cce49e")}
-                onMouseLeave={(e) => (e.target.style.color = "#297fb2")}
-              >
-                Create Content
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
+      <Navbar language={language} setLanguage={setLanguage} />
 
       {/* Hero Section */}
       <header
@@ -83,7 +67,7 @@ const Home = () => {
             className="text-6xl md:text-8xl font-light mb-6 leading-tight"
             style={{ color: "#297fb2" }}
           >
-            Welcome to Nureach AI
+            {t.title}
           </h1>
           <div
             className="w-24 h-1 mx-auto mb-8"
@@ -93,8 +77,7 @@ const Home = () => {
             className="text-xl md:text-2xl font-light max-w-2xl mx-auto mb-12 leading-relaxed"
             style={{ color: "#6b7280" }}
           >
-            Empowering your marketing strategy with advanced artificial
-            intelligence
+            {t.subtitle}
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <button
@@ -103,7 +86,7 @@ const Home = () => {
               onMouseEnter={(e) => (e.target.style.opacity = "0.9")}
               onMouseLeave={(e) => (e.target.style.opacity = "1")}
             >
-              Get Started
+              {t.getStarted}
             </button>
             <button
               className="px-10 py-4 rounded font-light text-lg transition duration-200"
@@ -121,7 +104,7 @@ const Home = () => {
                 e.target.style.color = "#297fb2";
               }}
             >
-              Learn More
+              {t.learnMore}
             </button>
           </div>
         </div>
