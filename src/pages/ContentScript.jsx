@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
@@ -14,12 +14,22 @@ const ContentScript = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { angle } = location.state || {};
+  const { angle, selectedTypology: typologyFromState } = location.state || {};
 
   const [currentScript, setCurrentScript] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [editingScriptId, setEditingScriptId] = useState(null);
   const [editableContent, setEditableContent] = useState("");
+  const [selectedTypology] = useState(typologyFromState || null);
+  const [scriptType, setScriptType] = useState(null); // 'content' or 'sale'
+  const [contentGuidance, setContentGuidance] = useState(""); // User's content preferences
+
+  // Redirect if no typology selected
+  useEffect(() => {
+    if (!typologyFromState && !selectedTypology) {
+      navigate(`/client/${id}/typologies`);
+    }
+  }, [typologyFromState, selectedTypology, navigate, id]);
 
   const { data: user } = useQuery({
     queryKey: ["user"],
@@ -56,11 +66,26 @@ const ContentScript = () => {
   const updateScriptMutation = useUpdateScript();
   const deleteScriptMutation = useDeleteScript();
 
-  const handleGenerate = async () => {
-    if (!client || !angle) return;
+  const handleGenerateWithGuidance = async () => {
+    if (!client || !angle || !selectedTypology) return;
     setIsGenerating(true);
     try {
-      const script = await generateScript(client, angle);
+      let script;
+      if (scriptType === "content") {
+        script = await generateScript(
+          client,
+          angle,
+          selectedTypology,
+          contentGuidance,
+        );
+      } else if (scriptType === "sale") {
+        script = await generateSaleScript(
+          client,
+          angle,
+          selectedTypology,
+          contentGuidance,
+        );
+      }
       setCurrentScript(script);
       setEditableContent(script);
     } catch (error) {
@@ -70,15 +95,43 @@ const ContentScript = () => {
     }
   };
 
-  const handleGenerateSale = async () => {
+  const handleRegenerateContent = async () => {
+    if (!selectedTypology) return;
+    setScriptType("content");
     if (!client || !angle) return;
     setIsGenerating(true);
     try {
-      const script = await generateSaleScript(client, angle);
+      const script = await generateScript(
+        client,
+        angle,
+        selectedTypology,
+        contentGuidance,
+      );
       setCurrentScript(script);
       setEditableContent(script);
     } catch (error) {
-      console.error("Failed to generate sale script:", error);
+      console.error("Failed to generate script:", error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleRegenerateSale = async () => {
+    if (!selectedTypology) return;
+    setScriptType("sale");
+    if (!client || !angle) return;
+    setIsGenerating(true);
+    try {
+      const script = await generateSaleScript(
+        client,
+        angle,
+        selectedTypology,
+        contentGuidance,
+      );
+      setCurrentScript(script);
+      setEditableContent(script);
+    } catch (error) {
+      console.error("Failed to generate script:", error);
     } finally {
       setIsGenerating(false);
     }
@@ -135,7 +188,11 @@ const ContentScript = () => {
     <div className="min-h-screen bg-gray-50 p-6 md:p-12 font-light">
       <div className="max-w-4xl mx-auto">
         <button
-          onClick={() => navigate(`/client/${id}/content`)}
+          onClick={() =>
+            navigate(`/client/${id}/content`, {
+              state: { selectedTypology: typologyFromState },
+            })
+          }
           className="mb-8 flex items-center gap-2 text-gray-500 hover:text-black transition-colors"
         >
           <span>←</span> ត្រឡប់ក្រោយ
@@ -154,23 +211,74 @@ const ContentScript = () => {
                 </div>
               </div>
               {!currentScript && !editingScriptId && (
-                <div className="flex gap-3">
-                  <button
-                    onClick={handleGenerate}
-                    disabled={isGenerating}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-medium transition-all flex items-center gap-2"
-                  >
-                    {isGenerating
-                      ? "កំពុងបង្កើត..."
-                      : "បង្កើត Content Script 🤖"}
-                  </button>
-                  <button
-                    onClick={handleGenerateSale}
-                    disabled={isGenerating}
-                    className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-medium transition-all flex items-center gap-2"
-                  >
-                    {isGenerating ? "កំពុងបង្កើត..." : "បង្កើត Sale Script 💰"}
-                  </button>
+                <div>
+                  {selectedTypology && (
+                    <div className="mb-6 space-y-4">
+                      {/* Selected Typology Header */}
+                      <div className="p-4 bg-linear-to-br from-blue-50 to-purple-50 rounded-xl border-2 border-blue-200">
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+                            ✓
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-600 uppercase tracking-wide">
+                              Selected Typology
+                            </p>
+                            <p className="font-bold text-lg text-blue-700">
+                              {selectedTypology.typologyName}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Content Guidance Input */}
+                      <div className="p-5 bg-linear-to-br from-indigo-50 to-blue-50 rounded-xl border-2 border-indigo-200">
+                        <div className="flex items-center gap-2 mb-3">
+                          <span className="text-2xl">✍️</span>
+                          <h3 className="font-bold text-indigo-800">
+                            Content Guidance (Optional)
+                          </h3>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-3">
+                          Tell us what you want or don't want in your script.
+                          For example: "Include family story", "No mention of
+                          price", "Focus on convenience", etc.
+                        </p>
+                        <textarea
+                          value={contentGuidance}
+                          onChange={(e) => setContentGuidance(e.target.value)}
+                          placeholder="e.g., សូមរួមបញ្ចូលរឿងគ្រួសារ, កុំនិយាយពីតម្លៃ, ផ្តោតលើភាពងាយស្រួល..."
+                          className="w-full h-24 p-3 bg-white border border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-sm"
+                        />
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => {
+                        setScriptType("content");
+                        handleGenerateWithGuidance();
+                      }}
+                      disabled={isGenerating}
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-medium transition-all flex items-center gap-2 disabled:opacity-50"
+                    >
+                      {isGenerating
+                        ? "កំពុងបង្កើត..."
+                        : "បង្កើត Content Script 🤖"}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setScriptType("sale");
+                        handleGenerateWithGuidance();
+                      }}
+                      disabled={isGenerating}
+                      className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-medium transition-all flex items-center gap-2 disabled:opacity-50"
+                    >
+                      {isGenerating
+                        ? "កំពុងបង្កើត..."
+                        : "បង្កើត Sale Script 💰"}
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -183,10 +291,10 @@ const ContentScript = () => {
                   {editingScriptId ? "កែសម្រួល Script" : "Script ដែលបានបង្កើត"}
                 </h2>
                 <div className="flex gap-2">
-                  {angle && !editingScriptId && (
+                  {angle && !editingScriptId && selectedTypology && (
                     <>
                       <button
-                        onClick={handleGenerate}
+                        onClick={handleRegenerateContent}
                         disabled={isGenerating}
                         className="text-blue-600 hover:text-blue-700 text-sm font-medium"
                       >
@@ -195,7 +303,7 @@ const ContentScript = () => {
                           : "Regenerate Content"}
                       </button>
                       <button
-                        onClick={handleGenerateSale}
+                        onClick={handleRegenerateSale}
                         disabled={isGenerating}
                         className="text-green-600 hover:text-green-700 text-sm font-medium"
                       >

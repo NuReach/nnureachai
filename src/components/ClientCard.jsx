@@ -45,7 +45,7 @@ const ClientCard = ({ client }) => {
       <div className="p-6">
         {/* Title and Status Badge */}
         <div className="flex justify-between items-start mb-3">
-          <h3 className="text-2xl font-light" style={{ color: "#297fb2" }}>
+          <h3 className="text-lg font-light" style={{ color: "#297fb2" }}>
             {client.product_name}
           </h3>
           <span
@@ -60,12 +60,18 @@ const ClientCard = ({ client }) => {
         </div>
 
         {/* Country */}
-        <p className="font-light mb-2" style={{ color: "#6b7280" }}>
+        <p
+          className="font-light mb-2 line-clamp-1"
+          style={{ color: "#6b7280" }}
+        >
           <strong>ប្រទេស:</strong> {client.country}
         </p>
 
         {/* Price */}
-        <p className="font-light mb-2" style={{ color: "#6b7280" }}>
+        <p
+          className="font-light mb-2 line-clamp-1"
+          style={{ color: "#6b7280" }}
+        >
           <strong>តម្លៃ:</strong> {client.price}
         </p>
 

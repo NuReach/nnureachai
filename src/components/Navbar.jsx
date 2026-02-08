@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Navbar = ({ language, setLanguage }) => {
+const Navbar = ({ language = "en", setLanguage }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const translations = {
@@ -20,7 +20,9 @@ const Navbar = ({ language, setLanguage }) => {
   const t = translations[language];
 
   const toggleLanguage = () => {
-    setLanguage(language === "en" ? "km" : "en");
+    if (setLanguage) {
+      setLanguage(language === "en" ? "km" : "en");
+    }
   };
 
   return (

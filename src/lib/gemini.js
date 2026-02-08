@@ -16,55 +16,148 @@ export const generateImmersion = async (clientData) => {
       competitors: "N/A", // This can be added to the form later if needed
     };
 
-    const prompt = `Act as a world-class Direct Response Marketing Strategist and Psychologist. 
-    Transform the following raw product data (provided in Khmer) into a comprehensive "Offer & Avatar Immersion Research" report.
-    
-    IMPORTANT: The entire response content (all string values in the JSON) MUST be written in high-quality, professional Khmer language.
-    
-    RAW DATA (KHMER):
-    1. Product Name/Country/Price: ${input.productInfo}
-    2. Problems Solved: ${input.problemsSolved}
-    3. Target Audience: ${input.targetAudience}
-    4. Warranty: ${input.warranty}
-    5. Promotion: ${input.promotion}
-    6. Differentiation: ${input.differentiation}
-    7. Competitors: ${input.competitors}
+    const prompt = `Act as a world-class Direct Response Marketing Strategist and Consumer Psychologist.
 
-    Your goal is to dig deep into the customer's psychology. 
-    Be specific, empathetic, and persuasive. Use professional marketing terminology in Khmer.
-    
-    Return a JSON object with the following structure (all content in Khmer):
+Transform the following raw product data (provided in Khmer) into a comprehensive "Offer, Avatar & User Typology Immersion Research" report.
+
+IMPORTANT:
+- The entire response MUST be returned as a valid JSON object.
+- ALL string values in the JSON MUST be written in high-quality, professional Khmer language.
+- Be realistic, behavior-based, and conversion-focused.
+- Avoid generic or theoretical explanations.
+
+RAW DATA (KHMER):
+1. Product Name / Country / Price: ${input.productInfo}
+2. Problems Solved: ${input.problemsSolved}
+3. Target Audience: ${input.targetAudience}
+4. Warranty: ${input.warranty}
+5. Promotion: ${input.promotion}
+6. Differentiation: ${input.differentiation}
+7. Competitors: ${input.competitors}
+
+Your goal is to deeply understand how different types of users THINK, FEEL, and DECIDE to buy.
+Focus on psychological drivers, objections, and emotional triggers—especially in short-form video and social media contexts.
+
+Return a JSON object with the following structure (ALL CONTENT IN KHMER):
+
+{
+  "avatarProfile": {
+    "demographics": "string (age range, gender, location, income level, lifestyle context)",
+    "psychographics": "string (beliefs, values, attitudes, habits, digital behavior)",
+    "painPoints": ["string", "string", "string"],
+    "desires": ["string", "string", "string"],
+    "fears": ["string", "string", "string"],
+    "objections": ["string", "string", "string"]
+  },
+
+  "userTypologies": [
     {
-      "avatarProfile": {
-        "demographics": "string (age, gender, location, income level, etc.)",
-        "psychographics": "string (values, beliefs, lifestyle, interests)",
-        "painPoints": ["string", "string", "string"],
-        "desires": ["string", "string", "string"],
-        "fears": ["string", "string", "string"],
-        "objections": ["string", "string", "string"]
-      },
-      "offerAnalysis": {
-        "coreValue": "string (main value proposition)",
-        "emotionalTriggers": ["string", "string", "string"],
-        "logicalBenefits": ["string", "string", "string"],
-        "uniqueSellingPoints": ["string", "string", "string"],
-        "guaranteeStrength": "string (analysis of warranty/guarantee)",
-        "promotionImpact": "string (analysis of promotion effectiveness)"
-      },
-      "marketingInsights": {
-        "buyingMotivation": "string (why they would buy)",
-        "decisionFactors": ["string", "string", "string"],
-        "messagingAngle": "string (recommended marketing angle)",
-        "callToAction": "string (recommended CTA)",
-        "competitiveAdvantage": "string (how to position against competitors)"
-      },
-      "recommendations": {
-        "contentStrategy": "string",
-        "channelStrategy": "string",
-        "timingStrategy": "string",
-        "followUpStrategy": "string"
-      }
-    }`;
+      "typologyName": "string (clear behavioral name)",
+      "mindset": "string (how this user thinks when scrolling)",
+      "corePain": "string (main problem or frustration)",
+      "coreDesire": "string (main emotional or practical desire)",
+      "buyingTrigger": "string (what finally pushes them to buy)",
+      "bestContentAngle": "string (most effective marketing angle)",
+      "ctaStyle": "string (best CTA tone: urgency, reassurance, soft, direct, etc.)"
+    },
+    {
+      "typologyName": "string",
+      "mindset": "string",
+      "corePain": "string",
+      "coreDesire": "string",
+      "buyingTrigger": "string",
+      "bestContentAngle": "string",
+      "ctaStyle": "string"
+    },
+    {
+      "typologyName": "string",
+      "mindset": "string",
+      "corePain": "string",
+      "coreDesire": "string",
+      "buyingTrigger": "string",
+      "bestContentAngle": "string",
+      "ctaStyle": "string"
+    },
+    {
+      "typologyName": "string",
+      "mindset": "string",
+      "corePain": "string",
+      "coreDesire": "string",
+      "buyingTrigger": "string",
+      "bestContentAngle": "string",
+      "ctaStyle": "string"
+    },
+    {
+      "typologyName": "string",
+      "mindset": "string",
+      "corePain": "string",
+      "coreDesire": "string",
+      "buyingTrigger": "string",
+      "bestContentAngle": "string",
+      "ctaStyle": "string"
+    },
+    {
+      "typologyName": "string",
+      "mindset": "string",
+      "corePain": "string",
+      "coreDesire": "string",
+      "buyingTrigger": "string",
+      "bestContentAngle": "string",
+      "ctaStyle": "string"
+    },
+    {
+      "typologyName": "string",
+      "mindset": "string",
+      "corePain": "string",
+      "coreDesire": "string",
+      "buyingTrigger": "string",
+      "bestContentAngle": "string",
+      "ctaStyle": "string"
+    },
+    {
+      "typologyName": "string",
+      "mindset": "string",
+      "corePain": "string",
+      "coreDesire": "string",
+      "buyingTrigger": "string",
+      "bestContentAngle": "string",
+      "ctaStyle": "string"
+    },
+    {
+      "typologyName": "string",
+      "mindset": "string",
+      "corePain": "string",
+      "coreDesire": "string",
+      "buyingTrigger": "string",
+      "bestContentAngle": "string",
+      "ctaStyle": "string"
+    }
+  ],
+
+  "offerAnalysis": {
+    "coreValue": "string",
+    "emotionalTriggers": ["string", "string", "string"],
+    "logicalBenefits": ["string", "string", "string"],
+    "uniqueSellingPoints": ["string", "string", "string"],
+    "guaranteeStrength": "string",
+    "promotionImpact": "string"
+  },
+
+  "marketingInsights": {
+    "buyingMotivation": "string",
+    "decisionFactors": ["string", "string", "string"],
+    "messagingAngle": "string",
+    "callToAction": "string",
+    "competitiveAdvantage": "string"
+  },
+
+  "recommendations": {
+    "contentStrategy": "string",
+    "channelStrategy": "string",
+    "timingStrategy": "string",
+    "followUpStrategy": "string"
+  }
+}`;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
@@ -86,9 +179,40 @@ export const generateImmersion = async (clientData) => {
   }
 };
 
-export const generateScript = async (clientData, angle) => {
+export const generateScript = async (
+  clientData,
+  angle,
+  typology = null,
+  userGuidance = "",
+) => {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+
+    const typologyContext = typology
+      ? `
+
+TARGET USER TYPOLOGY (FOCUS ON THIS SPECIFIC AUDIENCE):
+Typology Name: ${typology.typologyName}
+Mindset: ${typology.mindset}
+Core Pain: ${typology.corePain}
+Core Desire: ${typology.coreDesire}
+Buying Trigger: ${typology.buyingTrigger}
+Best Content Angle: ${typology.bestContentAngle}
+CTA Style: ${typology.ctaStyle}
+
+IMPORTANT: You MUST craft this script specifically for this typology. Use their exact mindset, pain point, and desire. Follow their preferred CTA style.
+`
+      : "";
+
+    const guidanceContext = userGuidance
+      ? `
+
+USER'S CONTENT GUIDANCE (MUST FOLLOW):
+${userGuidance}
+
+⚠️ CRITICAL: Respect the user's guidance above. If they want something included, include it naturally. If they want something excluded, do NOT mention it at all.
+`
+      : "";
 
     const prompt = `Role:
 You are a Khmer product or service content creator and social media storyteller who deeply understands Cambodian buying psychology, especially fear, peace of mind, convenience, modern lifestyle, social status, and daily-life stress. You think like a real Cambodian buyer, not a marketer.
@@ -107,7 +231,7 @@ You MUST follow the angle description when deciding:
 2.  **High Energy & Enthusiastic:** Sound like a best friend sharing a secret tip.
 3.  **Persuasive:** Focus on speed of results (e.g., "in 3 days") and sensory details (texture, feeling).
 4.  **Script angles** : ${angle.title} (${angle.description})
-
+${typologyContext}${guidanceContext}
 Client/Product Data:
 Product: ${clientData.product_name}
 Target Customers: ${clientData.target_customers}
@@ -132,41 +256,44 @@ STRUCTURE (ANGLE-DRIVEN):
 
 1. 🔥 HOOK (First 2–3 seconds)
 Create the hook STRICTLY based on the selected marketing angle:
-• If the angle is Problem–Solution → open with a painful daily problem
-• If Curiosity → open with confusion, mystery, or unfinished thought
-• If Pattern Interruption → open with something unexpected or opposite
-• If Price Anchoring → open with an expensive or painful alternative
-• If Testimonial / Feedback → open with customer words or reaction
-• If Paradox / Myth → open with a statement that sounds wrong but true
+- focus on the result of ${typology} may get after using product.
 
-Do NOT default to fear or problems unless the angle requires it.
-
-2. 🎬 STORY / PAIN POINT
-Develop the story according to the angle logic.
-Stay natural and conversational.
-Use real Cambodian habits, stress, or situations.
-Light humor or exaggeration is allowed.
-
-3. 💚 PRODUCT / SERVICE MOMENT (Soft Sell)
-Introduce ${clientData.product_name} naturally according to the angle.
+2. 💚 PRODUCT / SERVICE MOMENT (Soft Sell)
+Introduce ${clientData.product_name} naturally according to the angle.${typology}
 No technical specs.
 Mention only ONE simple benefit.
 Focus on relief, ease, or peace of mind.
 
+3. 🎬 STORY / PAIN POINT
+Develop the story according to the angle logic.${
+      typology
+        ? `
+⚠️ FOCUS: The story MUST revolve around the typology's CORE PAIN: "${typology.corePain}"
+Make them feel seen, understood, and like you're inside their head.`
+        : ""
+    }
+Stay natural and conversational.
+Use real Cambodian habits, stress, or situations.
+Light humor or exaggeration is allowed.
+
+
 4. 🤔 DOUBT → TURNING POINT → MICRO PROOF
-Show hesitation first (price, trust, complexity, fear).
+Show hesitation first (price, trust, complexity, fear).${
+      typology
+        ? `
+⚠️ TRIGGER MOMENT: Address their BUYING TRIGGER: "${typology.buyingTrigger}"
+This is what pushes them over the edge—use it wisely.`
+        : ""
+    }
 Flip softly using one believable moment:
 • First-time use
 • Family reaction
 • Daily-life convenience
 • Feeling calmer or more confident
 
-5. ✅ RESULT / ENDING
-End with calmness, confidence, or peace of mind.
-Use a soft, curiosity-based CTA only.
-No pushing.
-
+5. A strong recommendation to comment or share or buy now (soft CTA, not hard selling)
 IMPORTANT RULES:
+.Hook->Product/Service Momoment
 • Write fully in Khmer language only
 • No emojis, no hashtags, no explanations
 • No obvious sales language
@@ -188,15 +315,46 @@ Generate ONE high-retention Khmer Reel or TikTok script that strictly follows th
   }
 };
 
-export const generateSaleScript = async (clientData, angle) => {
+export const generateSaleScript = async (
+  clientData,
+  angle,
+  typology = null,
+  userGuidance = "",
+) => {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+
+    const typologyContext = typology
+      ? `
+
+TARGET USER TYPOLOGY (FOCUS ON THIS SPECIFIC AUDIENCE):
+Typology Name: ${typology.typologyName}
+Mindset: ${typology.mindset}
+Core Pain: ${typology.corePain}
+Core Desire: ${typology.coreDesire}
+Buying Trigger: ${typology.buyingTrigger}
+Best Content Angle: ${typology.bestContentAngle}
+CTA Style: ${typology.ctaStyle}
+
+IMPORTANT: You MUST craft this sale script specifically for this typology. Use their exact mindset, pain point, and desire. Follow their preferred CTA style to maximize conversion.
+`
+      : "";
+
+    const guidanceContext = userGuidance
+      ? `
+
+USER'S CONTENT GUIDANCE (MUST FOLLOW):
+${userGuidance}
+
+⚠️ CRITICAL: Respect the user's guidance above. If they want something included, include it naturally. If they want something excluded, do NOT mention it at all.
+`
+      : "";
 
     const prompt = `
 ROLE:
 Act as an expert Khmer Content Creator and Copywriter for TikTok and Facebook Reels. You specialize in "User Generated Content" (UGC) scripts that go viral in Cambodia.
 TASK:
-Create ONE viral video script (40-50 seconds) designed to hook viewers instantly and drive sales through "friend-to-friend" persuasion.
+Create ONE viral video script (35-45 seconds) designed to hook viewers instantly and drive sales through "friend-to-friend" persuasion.
 INPUT DATA:
 Product Name: ${clientData.product_name}
 Target Problems: ${clientData.problems.join(", ")}
@@ -205,17 +363,27 @@ Promise/Guarantee: ${clientData.warranty}
 Current Promotion: ${clientData.promotion}
 
 Your writing style must be:
-1.  **Colloquial & Conversational:** Use spoken Khmer slang (ហាស, ហ្មង, អត់, ម៉ោ, ណ៎ា,បងៗ,បងប្អូនយើង, មិនចឹងអី). Do NOT use formal/news-reporter Khmer.
+1.  **Colloquial & Conversational:** Use spoken Khmer slang (ហាស, មែនទែន, ហ្មង, អត់, ម៉ោ, ណ៎ា,បងៗ,បងប្អូនយើង, មិនចឹងអី). Do NOT use formal/news-reporter Khmer.
 2.  **High Energy & Enthusiastic:** Sound like a best friend sharing a secret tip.
 3.  **Persuasive:** Focus on speed of results (e.g., "in 3 days") and sensory details (texture, feeling).
 4. Script angles : ${angle.title} (${angle.description})
-
+${typologyContext}${guidanceContext}
 You will generate a 40-55 second video script following this structure:
-* **Hook:** aligns with the marketing angle  ( 3 second only)  .
-* **Agitation:** Describe the pain point vividly (3 second only) .
-* **Solution:** Introduce the product Mention its texture, color, or origin (e.g., Korean, Natural).
-* **Promise/Proof:** How fast does it work? How does it feel)?
-* **CTA:** A strong recommendation to buy now.
+* **Hook:** aligns with the marketing angle (3 second only)${typology}
+* **Solution:** Introduce the product${
+      typology
+        ? `
+  ⚠️ Position as the answer to their core desire: "${typology.coreDesire}"`
+        : ""
+    }. Mention its texture, color, or origin (e.g., Korean, Natural).
+* **Agitation:** Describe the pain point vividly (3 second only)
+* **Promise/Proof:** How fast does it work? How does it feel?${
+      typology
+        ? `
+  ⚠️ Trigger their buying decision with: "${typology.buyingTrigger}"`
+        : ""
+    }
+* **CTA:** A strong recommendation to comment or share or buy now 
 
 FINAL OUTPUT RULES:
 • Write in Khmer language (Unicode) ONLY.

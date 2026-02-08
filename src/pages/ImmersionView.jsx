@@ -64,6 +64,24 @@ const ImmersionView = () => {
   const handleExport = () => {
     if (!immersion || !client) return;
 
+    const typologiesData = immersion.userTypologies
+      ? [
+          `\n`,
+          `V. USER TYPOLOGIES (អ្នកប្រើប្រាស់)`,
+          `-----------------------------------`,
+          ...immersion.userTypologies.flatMap((typology, index) => [
+            `\n${index + 1}. ${typology.typologyName}`,
+            `   Mindset (របៀបគិត): ${typology.mindset}`,
+            `   Core Pain (ចំណុចឈឺចាប់ស្នូល): ${typology.corePain}`,
+            `   Core Desire (បំណងប្រាថ្នាស្នូល): ${typology.coreDesire}`,
+            `   Buying Trigger (កត្តាទិញ): ${typology.buyingTrigger}`,
+            `   Best Content Angle (មុំមាតិកាល្អបំផុត): ${typology.bestContentAngle}`,
+
+            `   CTA Style (ស្ទីល CTA): ${typology.ctaStyle}`,
+          ]),
+        ]
+      : [];
+
     const data = [
       `CUSTOMER AVATAR IMMERSION REPORT`,
       `================================`,
@@ -112,6 +130,7 @@ const ImmersionView = () => {
       `Channel Strategy (យុទ្ធសាស្ត្រឆានែល): ${immersion.recommendations.channelStrategy}`,
       `Timing Strategy (យុទ្ធសាស្ត្រពេលវេលា): ${immersion.recommendations.timingStrategy}`,
       `Follow-up Strategy (យុទ្ធសាស្ត្រតាមដាន): ${immersion.recommendations.followUpStrategy}`,
+      ...typologiesData,
     ].join("\n");
 
     const blob = new Blob([data], { type: "text/plain" });
@@ -506,6 +525,57 @@ const ImmersionView = () => {
             </div>
           </div>
         </div>
+
+        {/* User Typologies Section - Full Width */}
+        {immersion.userTypologies && immersion.userTypologies.length > 0 && (
+          <div className="mt-6">
+            <div className="bg-white rounded-3xl shadow-xl p-10 relative overflow-hidden">
+              <div
+                className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-5"
+                style={{
+                  background:
+                    "linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)",
+                  transform: "translate(40%, -40%)",
+                }}
+              ></div>
+
+              <div className="relative z-10">
+                <div className="flex items-center gap-4 mb-8">
+                  <div
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center text-4xl"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
+                    }}
+                  >
+                    👥
+                  </div>
+                  <div>
+                    <h3
+                      className="text-3xl font-bold"
+                      style={{ color: "#7c3aed" }}
+                    >
+                      9 User Typologies អ្នកប្រើប្រាស់
+                    </h3>
+                    <p className="text-gray-500 text-sm">
+                      Detailed User Behavior Typologies
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {immersion.userTypologies.map((typology, idx) => (
+                    <TypologyCard
+                      key={idx}
+                      typology={typology}
+                      index={idx + 1}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
@@ -643,5 +713,98 @@ const ActionCard = ({ title, icon, content }) => (
     <p className="text-gray-700 text-sm leading-relaxed">{content}</p>
   </div>
 );
+
+// Typology Card Component
+const TypologyCard = ({ typology, index }) => {
+  const colors = [
+    { bg: "#fef3c7", border: "#f59e0b", text: "#d97706" },
+    { bg: "#dbeafe", border: "#3b82f6", text: "#1d4ed8" },
+    { bg: "#fce7f3", border: "#ec4899", text: "#be185d" },
+    { bg: "#dcfce7", border: "#22c55e", text: "#15803d" },
+    { bg: "#f3e8ff", border: "#a855f7", text: "#7e22ce" },
+    { bg: "#ffedd5", border: "#f97316", text: "#c2410c" },
+    { bg: "#e0e7ff", border: "#6366f1", text: "#4338ca" },
+    { bg: "#fecdd3", border: "#f43f5e", text: "#be123c" },
+    { bg: "#ccfbf1", border: "#14b8a6", text: "#0f766e" },
+  ];
+
+  const color = colors[(index - 1) % colors.length];
+
+  return (
+    <div
+      className="rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border-2"
+      style={{
+        backgroundColor: color.bg,
+        borderColor: color.border,
+      }}
+    >
+      <div className="flex items-center gap-3 mb-4">
+        <div
+          className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg"
+          style={{ backgroundColor: color.border }}
+        >
+          {index}
+        </div>
+        <h4 className="font-bold text-lg flex-1" style={{ color: color.text }}>
+          {typology.typologyName}
+        </h4>
+      </div>
+
+      <div className="space-y-3">
+        <div className="p-3 rounded-lg bg-white/60 backdrop-blur-sm">
+          <p className="text-xs font-semibold text-gray-600 mb-1">🧠 Mindset</p>
+          <p className="text-sm text-gray-800 leading-relaxed">
+            {typology.mindset}
+          </p>
+        </div>
+
+        <div className="p-3 rounded-lg bg-white/60 backdrop-blur-sm">
+          <p className="text-xs font-semibold text-gray-600 mb-1">
+            😣 Core Pain
+          </p>
+          <p className="text-sm text-gray-800 leading-relaxed">
+            {typology.corePain}
+          </p>
+        </div>
+
+        <div className="p-3 rounded-lg bg-white/60 backdrop-blur-sm">
+          <p className="text-xs font-semibold text-gray-600 mb-1">
+            ✨ Core Desire
+          </p>
+          <p className="text-sm text-gray-800 leading-relaxed">
+            {typology.coreDesire}
+          </p>
+        </div>
+
+        <div className="p-3 rounded-lg bg-white/60 backdrop-blur-sm">
+          <p className="text-xs font-semibold text-gray-600 mb-1">
+            🎯 Buying Trigger
+          </p>
+          <p className="text-sm text-gray-800 leading-relaxed">
+            {typology.buyingTrigger}
+          </p>
+        </div>
+
+        <div className="p-3 rounded-lg bg-white/60 backdrop-blur-sm">
+          <p className="text-xs font-semibold text-gray-600 mb-1">
+            💡 Best Content Angle
+          </p>
+          <p className="text-sm text-gray-800 leading-relaxed">
+            {typology.bestContentAngle}
+          </p>
+        </div>
+
+        <div className="p-3 rounded-lg bg-white/60 backdrop-blur-sm">
+          <p className="text-xs font-semibold text-gray-600 mb-1">
+            📢 CTA Style
+          </p>
+          <p className="text-sm text-gray-800 leading-relaxed">
+            {typology.ctaStyle}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default ImmersionView;

@@ -1,11 +1,20 @@
-import React, { useMemo, useCallback } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useMemo, useCallback, useEffect } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useScripts } from "../hooks/useScripts";
 
 const ContentPlan = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { selectedTypology } = location.state || {};
   const { data: savedScripts = [] } = useScripts(id);
+
+  // Redirect if no typology selected
+  useEffect(() => {
+    if (!selectedTypology) {
+      navigate(`/client/${id}/typologies`);
+    }
+  }, [selectedTypology, navigate, id]);
 
   const getScriptCount = useCallback(
     (title) => {
@@ -285,66 +294,118 @@ const ContentPlan = () => {
     <div className="min-h-screen bg-gray-50 p-6 md:p-12 font-light">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <button
-          onClick={() => navigate(`/client/${id}`)}
-          className="mb-8 flex items-center gap-2 text-gray-500 hover:text-black transition-colors"
-        >
-          <span>←</span> ត្រឡប់ក្រោយ
-        </button>
+        <div className="mb-8">
+          <button
+            onClick={() => navigate(`/client/${id}/typologies`)}
+            className="mb-4 flex items-center gap-2 text-gray-500 hover:text-black transition-colors"
+          >
+            <span>←</span> ត្រឡប់ទៅ Typologies
+          </button>
+
+          {/* Selected Typology Display */}
+          {selectedTypology && (
+            <div className="mb-6 p-5 bg-linear-to-r from-purple-50 to-blue-50 rounded-2xl border-2 border-purple-200 shadow-sm">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-full bg-purple-600 flex items-center justify-center text-white font-bold text-lg shrink-0">
+                  ✓
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-bold text-purple-900 mb-2">
+                    🎯 Selected Typology: {selectedTypology.typologyName}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                    <div>
+                      <span className="font-semibold text-gray-700">🧠 Mindset:</span>
+                      <p className="text-gray-600 mt-1">{selectedTypology.mindset}</p>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-gray-700">😣 Core Pain:</span>
+                      <p className="text-gray-600 mt-1">{selectedTypology.corePain}</p>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-gray-700">✨ Core Desire:</span>
+                      <p className="text-gray-600 mt-1">{selectedTypology.coreDesire}</p>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-gray-700">💡 Best Angle:</span>
+                      <p className="text-gray-600 mt-1">{selectedTypology.bestContentAngle}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
 
         <h1 className="text-2xl md:text-3xl font-medium mb-2 text-gray-800">
-          យោងទៅតាមការណែនាំរបស់ Nureach Ai យើងសូមណែនាំនូវ Angles មាតិកាទាំង ៣២៖
+          ជ្រើសរើស Content Angle
         </h1>
         <p className="text-gray-500 mb-12">
-          "According to Nureach Ai recommend 32 content angles"
+          "Choose your content angle from 32 proven frameworks"
         </p>
 
         {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {angles.map((angle, index) => (
-            <div
-              key={index}
-              className="p-8 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 group"
-            >
-              <div className="flex justify-between items-start mb-6">
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl transition-transform group-hover:scale-110"
-                  style={{ backgroundColor: angle.bg, color: angle.color }}
-                >
-                  {angle.icon}
-                </div>
-                {getScriptCount(angle.title) > 0 && (
-                  <span
-                    className="text-xs font-bold px-2 py-1 rounded-full"
+          {angles.map((angle, index) => {
+            const isRecommended =
+              selectedTypology &&
+              selectedTypology.bestContentAngle &&
+              selectedTypology.bestContentAngle.toLowerCase().includes(angle.title.toLowerCase());
+
+            return (
+              <div
+                key={index}
+                className={`p-8 rounded-2xl bg-white border shadow-sm hover:shadow-md transition-all duration-300 group relative ${
+                  isRecommended
+                    ? "border-purple-400 ring-2 ring-purple-200"
+                    : "border-gray-100"
+                }`}
+              >
+                {isRecommended && (
+                  <div className="absolute -top-3 -right-3 bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg animate-pulse">
+                    ⭐ RECOMMENDED
+                  </div>
+                )}
+                <div className="flex justify-between items-start mb-6">
+                  <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl transition-transform group-hover:scale-110"
                     style={{ backgroundColor: angle.bg, color: angle.color }}
                   >
-                    {getScriptCount(angle.title)} Scripts
-                  </span>
-                )}
-              </div>
-              <h3
-                className="text-xl font-medium mb-3"
-                style={{ color: angle.color }}
-              >
-                {angle.title}
-              </h3>
-              <p className="text-gray-600 leading-relaxed line-clamp-4">
-                {angle.description}
-              </p>
+                    {angle.icon}
+                  </div>
+                  {getScriptCount(angle.title) > 0 && (
+                    <span
+                      className="text-xs font-bold px-2 py-1 rounded-full"
+                      style={{ backgroundColor: angle.bg, color: angle.color }}
+                    >
+                      {getScriptCount(angle.title)} Scripts
+                    </span>
+                  )}
+                </div>
+                <h3
+                  className="text-xl font-medium mb-3"
+                  style={{ color: angle.color }}
+                >
+                  {angle.title}
+                </h3>
+                <p className="text-gray-600 leading-relaxed line-clamp-4">
+                  {angle.description}
+                </p>
 
-              <button
-                onClick={() =>
-                  navigate(`/client/${id}/content/script`, {
-                    state: { angle: angle },
-                  })
-                }
-                className="mt-8 text-sm font-medium flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                style={{ color: angle.color }}
-              >
-                បង្កើតមាតិកានេះ <span>→</span>
-              </button>
-            </div>
-          ))}
+                <button
+                  onClick={() =>
+                    navigate(`/client/${id}/content/script`, {
+                      state: { angle: angle, selectedTypology: selectedTypology },
+                    })
+                  }
+                  className="mt-8 text-sm font-medium flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                  style={{ color: angle.color }}
+                >
+                  បង្កើតមាតិកានេះ <span>→</span>
+                </button>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

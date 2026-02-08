@@ -925,7 +925,7 @@ const ClientDetail = () => {
 
                   {/* Create Content */}
                   <button
-                    onClick={() => navigate(`/client/${id}/content`)}
+                    onClick={() => navigate(`/client/${id}/typologies`)}
                     className="w-full p-4 rounded-lg font-light transition duration-200 flex items-center justify-between"
                     style={{
                       backgroundColor: "#f0fdf4",
