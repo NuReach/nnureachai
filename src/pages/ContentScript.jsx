@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
-import { generateScript } from "../lib/gemini";
+import { generateScript, generateSaleScript } from "../lib/gemini";
 import {
   useScripts,
   useCreateScript,
@@ -65,6 +65,20 @@ const ContentScript = () => {
       setEditableContent(script);
     } catch (error) {
       console.error("Failed to generate script:", error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleGenerateSale = async () => {
+    if (!client || !angle) return;
+    setIsGenerating(true);
+    try {
+      const script = await generateSaleScript(client, angle);
+      setCurrentScript(script);
+      setEditableContent(script);
+    } catch (error) {
+      console.error("Failed to generate sale script:", error);
     } finally {
       setIsGenerating(false);
     }
@@ -140,15 +154,24 @@ const ContentScript = () => {
                 </div>
               </div>
               {!currentScript && !editingScriptId && (
-                <button
-                  onClick={handleGenerate}
-                  disabled={isGenerating}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-medium transition-all flex items-center gap-2"
-                >
-                  {isGenerating
-                    ? "កំពុងបង្កើត..."
-                    : "បង្កើត Script ជាមួយ AI 🤖"}
-                </button>
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleGenerate}
+                    disabled={isGenerating}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-medium transition-all flex items-center gap-2"
+                  >
+                    {isGenerating
+                      ? "កំពុងបង្កើត..."
+                      : "បង្កើត Content Script 🤖"}
+                  </button>
+                  <button
+                    onClick={handleGenerateSale}
+                    disabled={isGenerating}
+                    className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-medium transition-all flex items-center gap-2"
+                  >
+                    {isGenerating ? "កំពុងបង្កើត..." : "បង្កើត Sale Script 💰"}
+                  </button>
+                </div>
               )}
             </div>
           )}
@@ -161,15 +184,26 @@ const ContentScript = () => {
                 </h2>
                 <div className="flex gap-2">
                   {angle && !editingScriptId && (
-                    <button
-                      onClick={handleGenerate}
-                      disabled={isGenerating}
-                      className="text-blue-600 hover:text-blue-700 text-sm font-medium"
-                    >
-                      {isGenerating
-                        ? "កំពុងបង្កើតថ្មី..."
-                        : "បង្កើតថ្មី (Regenerate)"}
-                    </button>
+                    <>
+                      <button
+                        onClick={handleGenerate}
+                        disabled={isGenerating}
+                        className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                      >
+                        {isGenerating
+                          ? "កំពុងបង្កើតថ្មី..."
+                          : "Regenerate Content"}
+                      </button>
+                      <button
+                        onClick={handleGenerateSale}
+                        disabled={isGenerating}
+                        className="text-green-600 hover:text-green-700 text-sm font-medium"
+                      >
+                        {isGenerating
+                          ? "កំពុងបង្កើតថ្មី..."
+                          : "Regenerate Sale"}
+                      </button>
+                    </>
                   )}
                 </div>
               </div>

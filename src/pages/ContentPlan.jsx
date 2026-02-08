@@ -76,7 +76,7 @@ const ContentPlan = () => {
         title: "Person A vs Person B",
         icon: "👥",
         description:
-          "Compare two people facing the same situation but making different choices, leading to different outcomes. Let viewers judge for themselves. Best for: Behavior change content.",
+          "Compare two people or two methods or two situations or two approaches or two perspectives or two experiences facing the same situation but making different choices, leading to different outcomes. Let viewers judge for themselves. Best for: Behavior change content.",
         color: "#14b8a6",
         bg: "#f0fdfa",
       },
@@ -264,6 +264,14 @@ const ContentPlan = () => {
         color: "#8b5cf6",
         bg: "#f5f3ff",
       },
+      {
+        title: "Hidden Power",
+        icon: "💪",
+        description:
+          "This angle highlights that a product's true value should not be judged by its size, appearance, or first impression. It plays on the psychology of surprise by contrasting a modest or unassuming look with unexpectedly strong performance or results. By breaking the common assumption that 'bigger or flashier means better,' this angle creates curiosity, trust, and memorability. It works especially well for compact products, affordable items, or solutions that deliver outsized results compared to their appearance.",
+        color: "#7c3aed",
+        bg: "#faf5ff",
+      },
     ];
 
     return [...rawAngles].sort((a, b) => {
@@ -285,14 +293,14 @@ const ContentPlan = () => {
         </button>
 
         <h1 className="text-2xl md:text-3xl font-medium mb-2 text-gray-800">
-          យោងទៅតាមការណែនាំរបស់ Nureach Ai យើងសូមណែនាំនូវ Angles មាតិកាទាំង ៣១៖
+          យោងទៅតាមការណែនាំរបស់ Nureach Ai យើងសូមណែនាំនូវ Angles មាតិកាទាំង ៣២៖
         </h1>
         <p className="text-gray-500 mb-12">
-          "According to Nureach Ai recommend 31 content angles"
+          "According to Nureach Ai recommend 32 content angles"
         </p>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {angles.map((angle, index) => (
             <div
               key={index}
@@ -320,7 +328,7 @@ const ContentPlan = () => {
               >
                 {angle.title}
               </h3>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-gray-600 leading-relaxed line-clamp-4">
                 {angle.description}
               </p>
 

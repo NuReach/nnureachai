@@ -94,7 +94,7 @@ export const generateScript = async (clientData, angle) => {
 You are a Khmer product or service content creator and social media storyteller who deeply understands Cambodian buying psychology, especially fear, peace of mind, convenience, modern lifestyle, social status, and daily-life stress. You think like a real Cambodian buyer, not a marketer.
 
 Task:
-Create a Khmer script for a Facebook Reel or TikTok (40–60 seconds) that feels real, raw, and authentic, like a casual video filmed during real daily life at home, borey, condo, shop, office, or outside, and later added with voice-over.
+Create a Khmer script for a Facebook Reel or TikTok (20–35 seconds) that feels real, raw, and authentic, like a casual video filmed during real daily life at home, borey, condo, shop, office, or outside, and later added with voice-over.
 The goal is to softly sell [PRODUCT NAME: ${clientData.product_name}] without sounding like selling at all.
 The video must feel like sharing a real personal experience with a close friend.
 
@@ -103,9 +103,10 @@ Angle Title: ${angle.title}
 Angle Description: ${angle.description}
 
 You MUST follow the angle description when deciding:
-• How the HOOK is written
-• How the story is framed
-• How the product or service is introduced
+1.  **Colloquial & Conversational:** Use spoken Khmer slang (ហាស, ហ្មង, អត់, ម៉ោ, ណ៎ា,បងៗ,បងប្អូនយើង, មិនចឹងអី). Do NOT use formal/news-reporter Khmer.
+2.  **High Energy & Enthusiastic:** Sound like a best friend sharing a secret tip.
+3.  **Persuasive:** Focus on speed of results (e.g., "in 3 days") and sensory details (texture, feeling).
+4.  **Script angles** : ${angle.title} (${angle.description})
 
 Client/Product Data:
 Product: ${clientData.product_name}
@@ -187,6 +188,51 @@ Generate ONE high-retention Khmer Reel or TikTok script that strictly follows th
   }
 };
 
+export const generateSaleScript = async (clientData, angle) => {
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+
+    const prompt = `
+ROLE:
+Act as an expert Khmer Content Creator and Copywriter for TikTok and Facebook Reels. You specialize in "User Generated Content" (UGC) scripts that go viral in Cambodia.
+TASK:
+Create ONE viral video script (40-50 seconds) designed to hook viewers instantly and drive sales through "friend-to-friend" persuasion.
+INPUT DATA:
+Product Name: ${clientData.product_name}
+Target Problems: ${clientData.problems.join(", ")}
+Key Features/Origin: ${clientData.uniqueness}
+Promise/Guarantee: ${clientData.warranty}
+Current Promotion: ${clientData.promotion}
+
+Your writing style must be:
+1.  **Colloquial & Conversational:** Use spoken Khmer slang (ហាស, ហ្មង, អត់, ម៉ោ, ណ៎ា,បងៗ,បងប្អូនយើង, មិនចឹងអី). Do NOT use formal/news-reporter Khmer.
+2.  **High Energy & Enthusiastic:** Sound like a best friend sharing a secret tip.
+3.  **Persuasive:** Focus on speed of results (e.g., "in 3 days") and sensory details (texture, feeling).
+4. Script angles : ${angle.title} (${angle.description})
+
+You will generate a 40-55 second video script following this structure:
+* **Hook:** aligns with the marketing angle  ( 3 second only)  .
+* **Agitation:** Describe the pain point vividly (3 second only) .
+* **Solution:** Introduce the product Mention its texture, color, or origin (e.g., Korean, Natural).
+* **Promise/Proof:** How fast does it work? How does it feel)?
+* **CTA:** A strong recommendation to buy now.
+
+FINAL OUTPUT RULES:
+• Write in Khmer language (Unicode) ONLY.
+• Do NOT use emojis.
+• Do NOT include timestamps or scene descriptions.
+• Return ONLY the spoken dialogue text.
+`;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    return response.text();
+  } catch (error) {
+    console.error("Error generating sale script:", error);
+    throw error;
+  }
+};
+
 export const generateBrandingTopics = async (clientData) => {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
@@ -253,9 +299,22 @@ Return ONLY a JSON array of 5 topic strings in Khmer. Example format:
   }
 };
 
-export const generateBrandingScript = async (topic) => {
+export const generateBrandingScript = async (topic, angle = null) => {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+
+    const angleContext = angle
+      ? `
+Marketing Angle Context (VERY IMPORTANT):
+Angle Title: ${angle.title}
+Angle Description: ${angle.description}
+
+You MUST follow the angle description when deciding:
+• How the HOOK is written
+• How the story is framed
+• How the content is structured and presented
+`
+      : "";
 
     const prompt = `Please create a script for a 30-second short-form video (e.g., for TikTok/Reels/Shorts) in Khmer Language.
 
@@ -263,8 +322,10 @@ The video should follow a fast-paced, list-style format, highlighting three to f
 
 Topic: ${topic}
 
+${angleContext}
+
 Format Requirements:
-1. A powerful attention-grabbing opening line
+1. A powerful attention-grabbing opening line${angle ? ` (based on the ${angle.title} angle)` : ""}
 2. First benefit/tip with brief explanation
 3. Second benefit/tip with brief explanation
 4. Third benefit/tip with brief explanation
