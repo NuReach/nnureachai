@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS scripts (
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   angle_title TEXT NOT NULL,
   content TEXT NOT NULL,
+  content_typology TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
 );
@@ -89,6 +90,7 @@ CREATE TABLE IF NOT EXISTS branding_scripts (
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   topic TEXT NOT NULL,
   content TEXT NOT NULL,
+  viral_angle TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
 );
@@ -141,3 +143,9 @@ CREATE TRIGGER update_branding_scripts_updated_at
 
 -- Add immersion_data column if it doesn't exist (for existing databases)
 ALTER TABLE clients ADD COLUMN IF NOT EXISTS immersion_data JSONB;
+
+-- Add viral_angle column to branding_scripts table (for storing the selected viral angle)
+ALTER TABLE branding_scripts ADD COLUMN IF NOT EXISTS viral_angle TEXT;
+
+-- Add content_typology column to scripts table (for storing the selected typology name)
+ALTER TABLE scripts ADD COLUMN IF NOT EXISTS content_typology TEXT;

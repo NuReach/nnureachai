@@ -130,9 +130,16 @@ const AllScripts = () => {
               >
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <span className="text-sm font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full mb-2 inline-block">
-                      {script.angle_title}
-                    </span>
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      <span className="text-sm font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+                        {script.angle_title}
+                      </span>
+                      {script.content_typology && (
+                        <span className="text-sm font-medium text-purple-600 bg-purple-50 px-3 py-1 rounded-full">
+                          {script.content_typology}
+                        </span>
+                      )}
+                    </div>
                     <p className="text-gray-400 text-xs">
                       រក្សាទុកនៅ:{" "}
                       {new Date(script.created_at).toLocaleDateString("km-KH", {

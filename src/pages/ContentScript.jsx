@@ -152,6 +152,7 @@ const ContentScript = () => {
         user_id: user.id,
         angle_title: angle.title,
         content: editableContent,
+        content_typology: selectedTypology?.typologyName || null,
       });
     }
     setCurrentScript("");
@@ -287,9 +288,18 @@ const ContentScript = () => {
           {(currentScript || editingScriptId) && (
             <div className="space-y-6">
               <div className="flex justify-between items-center">
-                <h2 className="text-lg font-medium text-gray-700">
-                  {editingScriptId ? "កែសម្រួល Script" : "Script ដែលបានបង្កើត"}
-                </h2>
+                <div>
+                  <h2 className="text-lg font-medium text-gray-700">
+                    {editingScriptId
+                      ? "កែសម្រួល Script"
+                      : "Script ដែលបានបង្កើត"}
+                  </h2>
+                  {selectedTypology && (
+                    <span className="text-sm font-medium text-purple-600 bg-purple-50 px-3 py-1 rounded-full mt-2 inline-block">
+                      {selectedTypology.typologyName}
+                    </span>
+                  )}
+                </div>
                 <div className="flex gap-2">
                   {angle && !editingScriptId && selectedTypology && (
                     <>
@@ -368,9 +378,16 @@ const ContentScript = () => {
               >
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <span className="text-sm font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full mb-2 inline-block">
-                      {script.angle_title}
-                    </span>
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      <span className="text-sm font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+                        {script.angle_title}
+                      </span>
+                      {script.content_typology && (
+                        <span className="text-sm font-medium text-purple-600 bg-purple-50 px-3 py-1 rounded-full">
+                          {script.content_typology}
+                        </span>
+                      )}
+                    </div>
                     <p className="text-gray-400 text-xs">
                       រក្សាទុកនៅ:{" "}
                       {new Date(script.created_at).toLocaleDateString()}

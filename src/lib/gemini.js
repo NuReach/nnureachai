@@ -131,6 +131,33 @@ Return a JSON object with the following structure (ALL CONTENT IN KHMER):
       "buyingTrigger": "string",
       "bestContentAngle": "string",
       "ctaStyle": "string"
+    },
+    {
+      "typologyName": "string",
+      "mindset": "string",
+      "corePain": "string",
+      "coreDesire": "string",
+      "buyingTrigger": "string",
+      "bestContentAngle": "string",
+      "ctaStyle": "string"
+    },
+    {
+      "typologyName": "string",
+      "mindset": "string",
+      "corePain": "string",
+      "coreDesire": "string",
+      "buyingTrigger": "string",
+      "bestContentAngle": "string",
+      "ctaStyle": "string"
+    },
+    {
+      "typologyName": "string",
+      "mindset": "string",
+      "corePain": "string",
+      "coreDesire": "string",
+      "buyingTrigger": "string",
+      "bestContentAngle": "string",
+      "ctaStyle": "string"
     }
   ],
 
@@ -303,7 +330,7 @@ IMPORTANT RULES:
 • Avoid technical specs and over-claiming
 
 Final Output:
-Generate ONE high-retention Khmer Reel or TikTok script that strictly follows the selected marketing angle and feels real, human, and trustworthy.
+Generate ONE high-retention Khmer Reel (20-30s) or TikTok script that strictly follows the selected marketing angle and feels real, human, and trustworthy.
 `;
 
     const result = await model.generateContent(prompt);
@@ -354,7 +381,7 @@ ${userGuidance}
 ROLE:
 Act as an expert Khmer Content Creator and Copywriter for TikTok and Facebook Reels. You specialize in "User Generated Content" (UGC) scripts that go viral in Cambodia.
 TASK:
-Create ONE viral video script (35-45 seconds) designed to hook viewers instantly and drive sales through "friend-to-friend" persuasion.
+Create ONE viral video script (20-30 seconds) designed to hook viewers instantly and drive sales through "friend-to-friend" persuasion.
 INPUT DATA:
 Product Name: ${clientData.product_name}
 Target Problems: ${clientData.problems.join(", ")}
@@ -369,7 +396,8 @@ Your writing style must be:
 4. Script angles : ${angle.title} (${angle.description})
 ${typologyContext}${guidanceContext}
 You will generate a 40-55 second video script following this structure:
-* **Hook:** aligns with the marketing angle (3 second only)${typology}
+* **Hook:** Create the hook STRICTLY based on the selected marketing angle:
+- focus on the result of ${typology} may get after using product.
 * **Solution:** Introduce the product${
       typology
         ? `
@@ -467,7 +495,7 @@ Return ONLY a JSON array of 5 topic strings in Khmer. Example format:
   }
 };
 
-export const generateBrandingScript = async (topic, angle = null) => {
+export const generateBrandingScript = async (topic, angle) => {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 

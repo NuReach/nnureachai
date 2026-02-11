@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Navbar from "../components/Navbar";
 import { supabase } from "../lib/supabase";
@@ -8,6 +8,7 @@ import { generateBrandingScript, generateBrandingTopics } from "../lib/gemini";
 const CreateBranding = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
   const [language, setLanguage] = useState("en");
   const [topic, setTopic] = useState("");
@@ -17,6 +18,9 @@ const CreateBranding = () => {
   const [editText, setEditText] = useState("");
   const [suggestedTopics, setSuggestedTopics] = useState([]);
   const [isLoadingTopics, setIsLoadingTopics] = useState(false);
+
+  // Get selected angle from navigation state
+  const selectedAngle = location.state?.selectedAngle;
 
   // Fetch current user
   const { data: user } = useQuery({
@@ -137,16 +141,23 @@ const CreateBranding = () => {
       return;
     }
 
+    if (!user) {
+      alert("សូមចាំឲ្យបានផ្ទុកទិន្នន័យអ្នកប្រើប្រាស់!");
+      return;
+    }
+
     setIsGenerating(true);
     try {
-      const text = await generateBrandingScript(topic);
+      // Pass the selected angle to the generation function
+      const text = await generateBrandingScript(topic, selectedAngle);
 
-      // Save to database
+      // Save to database, including the angle information
       await saveScriptMutation.mutateAsync({
         client_id: id,
         user_id: user.id,
         topic: topic,
         content: text,
+        viral_angle: selectedAngle ? selectedAngle.title : null,
       });
 
       setTopic("");
@@ -236,6 +247,91 @@ const CreateBranding = () => {
             </div>
           )}
 
+          {/* Selected Viral Angle Display */}
+          {selectedAngle && (
+            <div
+              className="mb-8 p-6 rounded-lg"
+              style={{
+                backgroundColor: selectedAngle.bgColor,
+                border: `2px solid ${selectedAngle.color}`,
+              }}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-3xl">{selectedAngle.icon}</span>
+                <div>
+                  <h3
+                    className="text-sm font-semibold uppercase tracking-wide"
+                    style={{ color: selectedAngle.color }}
+                  >
+                    Selected Viral Angle
+                  </h3>
+                  <h2
+                    className="text-xl font-bold"
+                    style={{ color: selectedAngle.color }}
+                  >
+                    {selectedAngle.title}
+                  </h2>
+                </div>
+                <button
+                  onClick={() => navigate(`/client/${id}/viral-angles`)}
+                  className="ml-auto px-4 py-2 rounded text-sm font-medium transition-colors"
+                  style={{
+                    backgroundColor: "white",
+                    color: selectedAngle.color,
+                    border: `1px solid ${selectedAngle.color}`,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = selectedAngle.color;
+                    e.target.style.color = "white";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = "white";
+                    e.target.style.color = selectedAngle.color;
+                  }}
+                >
+                  Change Angle
+                </button>
+              </div>
+              <p className="text-sm text-gray-700">
+                {selectedAngle.description}
+              </p>
+            </div>
+          )}
+
+          {/* No Angle Selected Warning */}
+          {!selectedAngle && (
+            <div
+              className="mb-8 p-6 rounded-lg border-2 border-orange-400"
+              style={{ backgroundColor: "#fff7ed" }}
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">⚠️</span>
+                <div className="flex-1">
+                  <h3 className="font-bold text-orange-600 mb-1">
+                    No Viral Angle Selected
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-3">
+                    You haven't selected a viral angle yet. Choose one to create
+                    more targeted and effective branding content.
+                  </p>
+                  <button
+                    onClick={() => navigate(`/client/${id}/viral-angles`)}
+                    className="px-4 py-2 rounded font-medium text-white transition-colors"
+                    style={{ backgroundColor: "#ea580c" }}
+                    onMouseEnter={(e) =>
+                      (e.target.style.backgroundColor = "#c2410c")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.target.style.backgroundColor = "#ea580c")
+                    }
+                  >
+                    Select Viral Angle →
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Input Section */}
           <div
             className="bg-white rounded-lg shadow-lg p-6 mb-8"
@@ -319,21 +415,32 @@ const CreateBranding = () => {
               className="w-full p-4 border rounded-lg font-light text-lg mb-4"
               style={{ borderColor: "#e5e7eb" }}
               onKeyPress={(e) => {
-                if (e.key === "Enter" && !isGenerating) {
+                if (
+                  e.key === "Enter" &&
+                  !isGenerating &&
+                  topic.trim() &&
+                  user
+                ) {
                   generateScript();
                 }
               }}
             />
             <button
               onClick={generateScript}
-              disabled={isGenerating || !topic.trim()}
+              disabled={isGenerating || !topic.trim() || !user}
               className="w-full py-4 rounded-lg font-light text-lg transition duration-200 disabled:opacity-50"
               style={{ backgroundColor: "#a855f7", color: "#ffffff" }}
               onMouseEnter={(e) =>
-                !isGenerating && (e.target.style.opacity = "0.9")
+                !isGenerating &&
+                topic.trim() &&
+                user &&
+                (e.target.style.opacity = "0.9")
               }
               onMouseLeave={(e) =>
-                !isGenerating && (e.target.style.opacity = "1")
+                !isGenerating &&
+                topic.trim() &&
+                user &&
+                (e.target.style.opacity = "1")
               }
             >
               {isGenerating ? "កំពុងបង្កើត..." : "🎨 បង្កើតស្គ្រីប"}

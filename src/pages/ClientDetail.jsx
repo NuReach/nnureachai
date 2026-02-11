@@ -953,7 +953,7 @@ const ClientDetail = () => {
 
                   {/* Create Branding */}
                   <button
-                    onClick={() => navigate(`/client/${id}/branding`)}
+                    onClick={() => navigate(`/client/${id}/viral-angles`)}
                     className="w-full p-4 rounded-lg font-light transition duration-200 flex items-center justify-between"
                     style={{
                       backgroundColor: "#fae8ff",

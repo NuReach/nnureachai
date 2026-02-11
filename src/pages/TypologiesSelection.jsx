@@ -122,6 +122,9 @@ const TypologyCard = ({ typology, index, onSelect }) => {
     { bg: "#e0e7ff", border: "#6366f1", text: "#4338ca", hover: "#c7d2fe" },
     { bg: "#fecdd3", border: "#f43f5e", text: "#be123c", hover: "#fda4af" },
     { bg: "#ccfbf1", border: "#14b8a6", text: "#0f766e", hover: "#99f6e4" },
+    { bg: "#fef2f2", border: "#ef4444", text: "#dc2626", hover: "#fee2e2" },
+    { bg: "#f0fdf4", border: "#16a34a", text: "#15803d", hover: "#dcfce7" },
+    { bg: "#fdf4ff", border: "#c026d3", text: "#a21caf", hover: "#fae8ff" },
   ];
 
   const color = colors[(index - 1) % colors.length];

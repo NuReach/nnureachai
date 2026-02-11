@@ -555,7 +555,7 @@ const ImmersionView = () => {
                       className="text-3xl font-bold"
                       style={{ color: "#7c3aed" }}
                     >
-                      9 User Typologies អ្នកប្រើប្រាស់
+                      12 User Typologies អ្នកប្រើប្រាស់
                     </h3>
                     <p className="text-gray-500 text-sm">
                       Detailed User Behavior Typologies
@@ -726,6 +726,9 @@ const TypologyCard = ({ typology, index }) => {
     { bg: "#e0e7ff", border: "#6366f1", text: "#4338ca" },
     { bg: "#fecdd3", border: "#f43f5e", text: "#be123c" },
     { bg: "#ccfbf1", border: "#14b8a6", text: "#0f766e" },
+    { bg: "#fef2f2", border: "#ef4444", text: "#dc2626" },
+    { bg: "#f0fdf4", border: "#16a34a", text: "#15803d" },
+    { bg: "#fdf4ff", border: "#c026d3", text: "#a21caf" },
   ];
 
   const color = colors[(index - 1) % colors.length];
