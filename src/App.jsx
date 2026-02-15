@@ -11,6 +11,7 @@ import CreateBranding from "./pages/CreateBranding";
 import TypologiesSelection from "./pages/TypologiesSelection";
 import AllScripts from "./pages/AllScripts";
 import ViralAngleSelection from "./pages/ViralAngleSelection";
+import DailyExpense from "./pages/DailyExpense";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           element={<ViralAngleSelection />}
         />
         <Route path="/client/:id/branding" element={<CreateBranding />} />
+        <Route path="/daily-expense" element={<DailyExpense />} />
       </Routes>
       <ReactQueryDevtools initialIsOpen={false} />
     </Router>

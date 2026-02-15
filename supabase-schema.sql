@@ -149,3 +149,73 @@ ALTER TABLE branding_scripts ADD COLUMN IF NOT EXISTS viral_angle TEXT;
 
 -- Add content_typology column to scripts table (for storing the selected typology name)
 ALTER TABLE scripts ADD COLUMN IF NOT EXISTS content_typology TEXT;
+
+-- Create expense_categories table for storing expense categories
+CREATE TABLE IF NOT EXISTS expense_categories (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  color TEXT NOT NULL DEFAULT '#3B82F6',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
+);
+
+-- Create expenses table for storing expense records
+CREATE TABLE IF NOT EXISTS expenses (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  category_id UUID NOT NULL REFERENCES expense_categories(id) ON DELETE CASCADE,
+  amount DECIMAL(10, 2) NOT NULL,
+  description TEXT,
+  date DATE NOT NULL DEFAULT CURRENT_DATE,
+  type TEXT NOT NULL DEFAULT 'expense' CHECK (type IN ('expense', 'income')),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
+);
+
+-- Add type column to expenses table (for existing databases)
+ALTER TABLE expenses ADD COLUMN IF NOT EXISTS type TEXT NOT NULL DEFAULT 'expense' CHECK (type IN ('expense', 'income'));
+
+-- Create indexes for better query performance
+CREATE INDEX IF NOT EXISTS idx_expense_categories_user_id ON expense_categories(user_id);
+CREATE INDEX IF NOT EXISTS idx_expenses_user_id ON expenses(user_id);
+CREATE INDEX IF NOT EXISTS idx_expenses_category_id ON expenses(category_id);
+CREATE INDEX IF NOT EXISTS idx_expenses_date ON expenses(date DESC);
+
+-- Enable Row Level Security
+ALTER TABLE expense_categories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE expenses ENABLE ROW LEVEL SECURITY;
+
+-- RLS Policies for expense_categories
+CREATE POLICY "Users can view own expense categories" ON expense_categories
+  FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own expense categories" ON expense_categories
+  FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own expense categories" ON expense_categories
+  FOR UPDATE
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own expense categories" ON expense_categories
+  FOR DELETE
+  USING (auth.uid() = user_id);
+
+-- RLS Policies for expenses
+CREATE POLICY "Users can view own expenses" ON expenses
+  FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own expenses" ON expenses
+  FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own expenses" ON expenses
+  FOR UPDATE
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own expenses" ON expenses
+  FOR DELETE
+  USING (auth.uid() = user_id);
